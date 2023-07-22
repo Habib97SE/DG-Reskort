@@ -1,84 +1,56 @@
-import Button from 'react-bootstrap/Button';
-import './App.css';
-import FormValidation from './FormValidation';
-
-const createTextFile = () => {
-  return "created .txt file";
-}
-
-const updateTextFile = (data) => {
-  return "data: " + data;
-}
-
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import CartItem from "./components/CartItem";
+import Cart from "./components/Cart";
+import image from "./assets/images/visby.jpeg";
+import NewCustomer from "./components/NewCustomer";
+import Table from "./components/Table";
 
 function App() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addItemToCart = (item) => {
+    // add id to item object to make it unique in the cart
+    while (true) {
+      item.id = Math.floor(Math.random() * 1000000);
+      if (!cartItems.some((cartItem) => cartItem.id === item.id)) {
+        break;
+      }
+    }
+    setCartItems((prevItems) => [...prevItems, item]);
+  };
+
+  const emptyCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <>
-    <FormValidation />
-    <Button  />
-    <div>
-      <h1>Lägg till en ny kund:</h1>
-      <p>Du kan använda formuläret nedan för att lägga till nya kunder.</p>
-      <p>När du är klar, kan du klicka på <b>Ladda ner</b> för att skapa .txt filen. </p>
-      <form>
-        <div className='form-control'>
-        <label>Kundnumbber: </label>
-        <input type='text' placeholder='e.g. 2039294' />
+      <Navbar
+        title="Destination Gotland"
+        navItems={["Home", "About", "Contact"]}
+      />
+      <div className="container">
+        <div className="row">
+          <header className="col-8 center mx-auto">
+            <img src={image} alt="header" className="img-fluid" />
+          </header>
         </div>
-        <div className='form-control'>
-        <label>Namn (För- och efternamn): </label>
-        <input type='text' placeholder='ex. Johan Johansson' />
+      </div>
+      <div className="container">
+        <div className="row mg-auto">
+          <div className="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xl-6">
+            <NewCustomer addItemToCart={addItemToCart} />
+          </div>
+
+          <div className="col-xs-12 col-sm-12 col-md-2 col-lg-4  col-xl-3">
+            <Cart items={cartItems} emptyCart={emptyCart} />
+          </div>
         </div>
-        <div className='form-control'>
-        <label>Utgångsdatum: </label>
-        <input type='text' placeholder='ex. 2023-07-18' />
-        </div>
-        <div className='form-control'>
-          <input type='submit' value='Lägg till' />
-        </div>
-      </form>
-    </div>
-    <div>
-      <div className='box'>
-        <ul>
-        <li>Kundnummer: 25844854</li>
-          <li>Namn: Hello world</li>
-          <li>Utgångsdatum: 2023-07-18</li>
-          <li><button>Redigera</button></li>
-          <li><button>Radera</button></li>
-        </ul>
       </div>
-      <div className='box'>
-        <ul>
-        <li>Kundnummer: 25844854</li>
-          <li>Namn: Hello world</li>
-          <li>Utgångsdatum: 2023-07-18</li>
-          <li><button>Redigera</button></li>
-          <li><button>Radera</button></li>
-        </ul>
-      </div>
-      <div className='box'>
-        <ul>
-        <li>Kundnummer: 25844854</li>
-          <li>Namn: Hello world</li>
-          <li>Utgångsdatum: 2023-07-18</li>
-          <li><button>Redigera</button></li>
-          <li><button>Radera</button></li>
-        </ul>
-      </div>
-      <div className='box'>
-        <ul>
-        <li>Kundnummer: 25844854</li>
-          <li>Namn: Hello world</li>
-          <li>Utgångsdatum: 2023-07-18</li>
-          <li><button>Redigera</button></li>
-          <li><button>Radera</button></li>
-        </ul>
-      </div>
-      <div>
-        <button>Ladda ner</button>
-      </div>
-    </div>
     </>
   );
 }

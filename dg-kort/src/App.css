@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300&family=Roboto+Slab&display=swap');
+
+body {
+    font-family: 'Roboto Slab', serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* set all h tags to Roboto Slab */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Roboto Slab', serif;
+}
+
+/* set all p tags to Noto Serif */
+p {
+    font-family: 'Noto Serif', serif;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+header img {
+    width: 100%;
+    max-height: 30vh;
+}
+
+li {
+    list-style: none;
+}
+
+input {
+    outline: none;
+}
+
+
+
+.red {
+    color: red;
+    font-size: 1.5rem;
+}
+
+.save-effect:hover {
+    color: #00b300;
+    /*  */
+}
+
+.delete-effect:hover {
+    color: #ff0000;
+}
+
+.edit-effect:hover {
+    color: #0000ff;
+}
