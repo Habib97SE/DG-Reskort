@@ -42,9 +42,9 @@ const Cart = (props) => {
     for (let i = 0; i < data.length; i++) {
       text +=
         data[i].accountNumber +
-        " " +
+        ", " +
         data[i].name +
-        " " +
+        ", " +
         data[i].expiryDate +
         "\n";
     }
