@@ -22,7 +22,7 @@ const Navbar = (props) => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <div className="container">
         <a className="navbar-brand" href="/">
-          <img src={Logo} alt="logo" className="img-fluid" />
+          <img src={Logo} alt={props.title} className="img-fluid" />
         </a>
         <button
           className="navbar-toggler"

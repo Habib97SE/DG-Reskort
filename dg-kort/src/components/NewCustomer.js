@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import Utility from "./utility";
 
 const newCustomerStyles = {
   fontSize: "1.2rem",
@@ -7,93 +8,15 @@ const newCustomerStyles = {
   padding: "1rem",
   margin: "1rem 0",
   borderRadius: "0.5rem",
+  // input focus
 
   alignItems: "center",
-};
-
-/**
- * Checks the expiry date. A valid expiry date must be in the future and in the format YYYY-MM-DD.
- * The expiry date can only contain digits and two hyphens.
- *
- * @param {String} input : The input to be validated
- * @returns : True if the input is a valid expiry date, false otherwise
- */
-const isValidExpiryDate = (input) => {
-  // Check if the input is not empty
-  if (input.trim() === "") {
-    return false;
-  }
-
-  // Check if the input contains only digits and two hyphens
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(input)) {
-    return false;
-  }
-
-  // Check if the input is a valid date in the future
-  const currentDate = new Date();
-  const inputDate = new Date(input);
-  if (inputDate <= currentDate) {
-    return false;
-  }
-
-  return true;
-};
-
-/**
- * Checks if the name is valid. A valid name must have exactly two parts, each part must contain only letters, hyphens, or dots.
- * @param {String} name : The name to be validated
- * @returns  : True if the name is valid, false otherwise
- */
-const isValidName = (name) => {
-  // Check if the name is empty or null
-  if (!name || name.trim() === "") {
-    return false;
-  }
-  // Split the name into parts using space as a delimiter
-  const nameParts = name.trim().split(" ");
-
-  // Check if there are exactly two parts
-  if (nameParts.length !== 2) {
-    return false;
-  }
-
-  // Regular expression to check if each part contains only letters, hyphens, or dots
-  const validPattern = /^[a-zA-Z.'-]+$/;
-
-  // Check if each part is valid
-  return nameParts.every((part) => validPattern.test(part));
-};
-
-const isValidAccountNumber = (input) => {
-  // Check if the input is not empty
-  if (input.trim() === "") {
-    return false;
-  }
-
-  // Check if the input contains only digits
-  if (!/^\d+$/.test(input)) {
-    return false;
-  }
-
-  return true;
-};
-
-const nextYearDate = () => {
-  const today = new Date();
-  const nextYear = new Date(
-    today.getFullYear() + 1,
-    today.getMonth(),
-    today.getDate()
-  );
-  nextYear.setMinutes(nextYear.getMinutes() - nextYear.getTimezoneOffset());
-  const formattedDate = nextYear.toISOString().split("T")[0];
-  return formattedDate;
 };
 
 const NewCustomer = ({ addItemToCart }) => {
   const [customerName, setCustomerName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState(nextYearDate());
+  const [expiryDate, setExpiryDate] = useState(Utility.nextYearDate());
 
   // Create a ref to the input element to be able to set focus on it when the component mounts
   const inputRef = useRef(null);
@@ -128,7 +51,7 @@ const NewCustomer = ({ addItemToCart }) => {
     e.preventDefault();
     setCustomerName("");
     setAccountNumber("");
-    setExpiryDate(nextYearDate());
+    setExpiryDate(Utility.nextYearDate()); // Provide an initial value here
     resetBorderColor();
     resetFieldMessages();
     // set focus on accountNumber input field
@@ -150,7 +73,7 @@ const NewCustomer = ({ addItemToCart }) => {
     const year = dateArray[0];
     const month = dateArray[1];
     const day = dateArray[2];
-    return day + "-" + month + "-" + year;
+    return year + "-" + month + "-" + day;
   };
 
   const resetBorderColor = (e) => {
@@ -204,19 +127,24 @@ const NewCustomer = ({ addItemToCart }) => {
     e.preventDefault();
 
     if (
-      !isValidName(customerName) ||
-      !isValidAccountNumber(accountNumber) ||
-      !isValidExpiryDate(expiryDate)
+      !Utility.isValidName(customerName) ||
+      !Utility.isValidAccountNumber(accountNumber) ||
+      !Utility.isValidExpiryDate(expiryDate)
     ) {
       setErrorMessage("submitMessage", "Kunden kunde inte läggas till.");
     } else {
       // ...
       // Add the customer to the cart
-      addItemToCart({
-        name: reformatName(customerName),
+      let result = addItemToCart({
+        name: Utility.formatName(customerName),
         accountNumber: accountNumber,
         expiryDate: reformatDate(expiryDate),
       });
+
+      if (!result) {
+        setErrorMessage("submitMessage", "Kunden finns redan i kundvagnen.");
+        return;
+      }
 
       // Reset the form
       resetForm(e);
@@ -237,7 +165,7 @@ const NewCustomer = ({ addItemToCart }) => {
   // handles customer name input field
   const handleCustomerNameChange = (value) => {
     const nameInput = document.getElementById("customerName");
-    if (!isValidName(value)) {
+    if (!Utility.isValidName(value)) {
       makeBorderRed(nameInput);
       setErrorMessage("customerNameFieldMessage", "Namn måste anges.");
     } else {
@@ -249,19 +177,20 @@ const NewCustomer = ({ addItemToCart }) => {
   // handles account number input field
   const handleCustomerNumberChange = (value) => {
     const accountNumberInput = document.getElementById("accountNumber");
-    if (isValidAccountNumber(accountNumberInput.value)) {
+    if (Utility.isValidAccountNumber(accountNumberInput.value)) {
       makeBorderGreen(accountNumberInput);
-      setSuccessMessage("accountNumberFieldMessage", "Kontonummer godkänt.");
+      setSuccessMessage("accountNumberFieldMessage", "kundnummer godkänt.");
     } else {
       makeBorderRed(accountNumberInput);
-      setErrorMessage("accountNumberFieldMessage", "Kontonummer måste anges.");
+      setErrorMessage("accountNumberFieldMessage", "Kundnummer måste anges.");
     }
   };
 
   // handles expiry date input field
   const handleExpirydDateChange = (value) => {
     const expiryDateInput = document.getElementById("expiryDate");
-    if (isValidExpiryDate(expiryDateInput.value)) {
+    console.log("expiryDateInput: ", expiryDateInput.value);
+    if (Utility.isValidExpiryDate(value)) {
       makeBorderGreen(expiryDateInput);
       setSuccessMessage("expiryDateFieldMessage", "Utgångsdatum godkänt.");
     } else {
@@ -289,7 +218,7 @@ const NewCustomer = ({ addItemToCart }) => {
       <h2>Ny kund</h2>
       <form>
         <div className="form-group">
-          <label htmlFor="accountNumber">Kontonummer:</label>
+          <label htmlFor="accountNumber">Kundnummer:</label>
           <input
             type="text"
             ref={inputRef}

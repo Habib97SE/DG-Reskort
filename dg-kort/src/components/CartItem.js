@@ -6,9 +6,13 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Utility from "./utility";
 
 const listItemStyle = {
   // Your existing styles...
+  "&:hover": {
+    backgroundColor: "#f4f4f4",
+  },
 };
 
 const cartItemStyles = {
@@ -16,15 +20,11 @@ const cartItemStyles = {
   backgroundColor: "#f4f4f4",
   boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.2)",
   padding: "1rem",
-  margin: "1rem 0",
   borderRadius: "0.5rem",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  transition: "all 0.3s ease-in-out",
-  "&:hover": {
-    boxShadow: "0 8px 16px 0 rgba(0, 0, 0, 0.2)",
-  },
+  margin: "1rem 0",
 };
 
 const CartItem = ({ item, removeFromCart }) => {
@@ -43,7 +43,7 @@ const CartItem = ({ item, removeFromCart }) => {
     // Perform your save or update action here...
     // For this example, we'll just set the state back to view mode.
     item.accountNumber = editedAccountNumber;
-    item.name = editedCustomerName;
+    item.name = Utility.formatName(editedCustomerName);
     item.expiryDate = editedExpiryDate;
     setEditMode(false);
   };
@@ -54,10 +54,10 @@ const CartItem = ({ item, removeFromCart }) => {
   };
 
   return (
-    <div className="box" style={cartItemStyles}>
+    <div className="box" style={{ ...cartItemStyles }}>
       <ul>
-        <li>
-          <label htmlFor="accountNumberCart">Kontonummer: </label>
+        <li style={{ ...listItemStyle }}>
+          <label htmlFor="accountNumberCart">kundnummer: </label>
           {editMode ? (
             <div className="">
               <input

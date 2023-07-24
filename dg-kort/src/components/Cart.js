@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CartItem from "./CartItem";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,14 +11,26 @@ const cartStyles = {
   padding: "1rem",
   margin: "1rem 0",
   borderRadius: "0.5rem",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  alignItems: "center",
 };
 
 const Cart = (props) => {
   const [cartItems, setCartItems] = useState(props.items);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      // Check if 'D' key (key code 68) is pressed
+      if (event.keyCode === 68 && event.ctrlKey && event.shiftKey) {
+        // Trigger the button click when 'CTRL' + 'SHIFT' + 'D' keys are pressed
+        buttonRef.current.click();
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   // Use useEffect to update the cartItems state when props.items changes
   useEffect(() => {
@@ -79,16 +91,18 @@ const Cart = (props) => {
   ));
 
   return (
-    <div className="box" style={cartStyles}>
-      <h2>Kundlista</h2>
+    <div className="box mg-auto" style={cartStyles}>
+      <h2>Kundlista:</h2>
       <p>
-        Här visas alla kunder som finns i kundvagnen. Du kan ta bort en kund
-        genom att klicka på "Ta bort" eller redigera en kund genom att klicka på
-        "Redigera". När du är klar med redigeringen klickar du på "Spara". För
-        att ladda ner kundlistan klickar du på "Ladda ner".
+        Klick på Ladda ner-knappen nedan eller använd kommandot:
+        <br /> <pre className="">CTRL</pre> + <pre>SHIFT</pre> + <pre>D</pre>{" "}
+        <br /> för att ladda ner .
       </p>
-      <ul>{itemsArr}</ul>
+      <ul className="list-group list-group-flush mx-4 my-4 px-2 py-2">
+        {itemsArr}
+      </ul>
       <button
+        ref={buttonRef}
         onClick={downloadTextFile}
         className="btn btn-primary mx-4 my-4 px-2 py-2"
       >

@@ -13,6 +13,17 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
 
   const addItemToCart = (item) => {
+    // if item already exists in cart, return false
+    for (let i = 0; i < cartItems.length; i++) {
+      if (
+        cartItems[i].accountNumber === item.accountNumber &&
+        cartItems[i].customerName === item.name
+      ) {
+        console.log("Customer already exists in cart.");
+        return false;
+      }
+    }
+
     // add id to item object to make it unique in the cart
     while (true) {
       item.id = Math.floor(Math.random() * 1000000);
@@ -21,6 +32,7 @@ function App() {
       }
     }
     setCartItems((prevItems) => [...prevItems, item]);
+    return true;
   };
 
   const emptyCart = () => {
@@ -29,25 +41,33 @@ function App() {
 
   return (
     <>
-      <Navbar
-        title="Destination Gotland"
-        navItems={["Home", "About", "Contact"]}
-      />
       <div className="container">
         <div className="row">
-          <header className="col-8 center mx-auto">
-            <img src={image} alt="header" className="img-fluid" />
-          </header>
+          <div className="col-12">
+            <Navbar
+              title="Destination Gotland"
+              navItems={["Home", "About", "Contact"]}
+            />
+          </div>
         </div>
       </div>
-      <div className="container">
-        <div className="row mg-auto">
-          <div className="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xl-6">
-            <NewCustomer addItemToCart={addItemToCart} />
+      <div className="col-12 col-xl-10 mx-auto">
+        <div className="container">
+          <div className="row">
+            <header className="col-12 center mx-auto">
+              <img src={image} alt="header" className="img-fluid" />
+            </header>
           </div>
+        </div>
+        <div className="container">
+          <div className="row">
+            <div className="col-xs-12 col-lg-8">
+              <NewCustomer addItemToCart={addItemToCart} />
+            </div>
 
-          <div className="col-xs-12 col-sm-12 col-md-2 col-lg-4  col-xl-3">
-            <Cart items={cartItems} emptyCart={emptyCart} />
+            <div className="col-xs-12 col-lg-4">
+              <Cart items={cartItems} emptyCart={emptyCart} />
+            </div>
           </div>
         </div>
       </div>

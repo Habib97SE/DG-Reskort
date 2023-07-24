@@ -50,6 +50,34 @@ input {
     outline: none;
 }
 
+pre {
+    display: inline-block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.5;
+    vertical-align: baseline;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+}
+
+.arrow-down {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid black;
+    margin-left: 5px;
+    display: inline-block;
+
+
+}
+
 
 
 .red {
