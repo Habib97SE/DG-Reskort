@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-async function getIPFromAmazon() {
-  const response = await fetch("https://checkip.amazonaws.com/");
-  const ipAddress = await response.text();
-  return ipAddress.trim(); // trim to remove any trailing whitespace
+async function getIPAddress() {
+  try {
+    const response = await fetch("https://api.ipify.org?format=json");
+    const data = await response.json();
+    console.log("Your IP address is " + data.ip);
+    return data.ip;
+  } catch (error) {
+    console.error("Error getting IP address:", error);
+    return "";
+  }
 }
 
 function isValidIP(ip) {
@@ -13,31 +19,28 @@ function isValidIP(ip) {
 }
 
 const VisitCounter = () => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const visitCount = localStorage.getItem("visitCount") || 0;
-    setCount(Number(visitCount) + 1);
-    localStorage.setItem("visitCount", Number(visitCount) + 1);
-  }, []);
-
   useEffect(() => {
     const saveIP = async () => {
-      const ipAddress = await getIPFromAmazon();
+      const ipAddress = await getIPAddress();
       if (isValidIP(ipAddress)) {
         const date = Date.now();
         try {
-          const response = await fetch("http://localhost:5000/visit", {
-            method: "post",
-            body: JSON.stringify({ ipAddress, date }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          console.log(ipAddress);
+          console.log(date);
+          const response = await fetch(
+            "https://dg-reskort-backend-d5dd39c2c5b3.herokuapp.com/visit",
+            {
+              method: "post",
+              body: JSON.stringify({ ipAddress, date }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
           const result = await response.json();
           console.warn(result);
           if (result) {
-            alert("Data saved succesfully");
+            console.log("Data saved succesfully");
           }
         } catch (error) {
           console.error("Error saving IP:", error);
