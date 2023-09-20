@@ -17,6 +17,10 @@ const Cart = (props) => {
   const [cartItems, setCartItems] = useState(props.items);
   const buttonRef = useRef(null);
 
+  /**
+   * Use useEffect to add an event listener to the document object when the component is mounted.
+   * This particular hook is used to listen for the 'CTRL' + 'SHIFT' + 'D' key combination to trigger the button click.
+   */
   useEffect(() => {
     const handleKeyPress = (event) => {
       // Check if 'D' key (key code 68) is pressed
@@ -83,6 +87,17 @@ const Cart = (props) => {
   };
 
   const addItemToCart = (item) => {
+    // check if the item is already in the cart with the same accountNumber and name, if so returns false
+    if (
+      cartItems.some(
+        (cartItem) =>
+          cartItem.accountNumber === item.accountNumber &&
+          cartItem.name === item.name
+      )
+    ) {
+      return false;
+    }
+
     setCartItems((prevItems) => [...prevItems, item]);
   };
 
